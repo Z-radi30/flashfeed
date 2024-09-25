@@ -6,7 +6,7 @@ import ArticleDetails from './components/ArticleDetails';
 import ErrorMessage from './components/ErrorMessage';
 import ThemeSwitcher from './components/ThemeSwitcher';
 
-const categories = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology'];
+const categories = ['Business', 'Entertainment', 'General', 'Health', 'Science', 'Sports', 'Technology'];
 
 const App = () => {
   const [articles, setArticles] = useState([]);
@@ -62,19 +62,19 @@ const App = () => {
           <ThemeSwitcher darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
         </div>
         <SearchBar onSearch={handleSearch} />
-        <div className="mb-6 flex flex-wrap gap-2">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => handleCategoryChange(category)}
-              className={`px-3 py-1 rounded ${
-                selectedCategory === category ? 'bg-primary text-primary-content' : 'bg-base-200 text-base-content'
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
+        <div className="mb-6 flex flex-wrap justify-center gap-2">
+  {categories.map((category) => (
+    <button
+      key={category}
+      onClick={() => handleCategoryChange(category)}
+      className={`px-3 py-1 rounded ${
+        selectedCategory === category ? 'bg-primary text-primary-content' : 'bg-base-200 text-base-content'
+      }`}
+    >
+      {category}
+    </button>
+  ))}
+</div>
         {loading && <p className="text-center">Loading...</p>}
         {error && <ErrorMessage message={error} />}
         {articles.length === 0 && !loading && !error && (
