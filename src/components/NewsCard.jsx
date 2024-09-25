@@ -4,7 +4,7 @@ import { formatDistanceToNow } from 'date-fns';
 const NewsCard = ({ article, onClick }) => {
   return (
     <div 
-      className="bg-white shadow-md rounded-lg overflow-hidden cursor-pointer transition duration-300 ease-in-out transform hover:scale-105"
+      className="bg-base-200 shadow-md rounded-lg overflow-hidden cursor-pointer transition duration-300 ease-in-out transform hover:scale-105"
       onClick={() => onClick(article)}
     >
       {article.urlToImage && (
