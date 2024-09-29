@@ -27,26 +27,22 @@ const App = () => {
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
   }, [darkMode]);
 
-  const fetchNews = async (query = '') => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = query
-        ? await searchNews(query)
-        : await getTopHeadlines('us', selectedCategory);
-      setArticles(response.data.articles);
-      setCurrentPage(1);
-    } catch (error) {
-      console.error('Error fetching news:', error);
-      if (error.response && error.response.status === 429) {
-        setError('We have reached our API request limit. Please try again in a few minutes.');
-      } else {
-        setError('Failed to fetch news. Please try again later.');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+ const fetchNews = async (query = '') => {
+  setLoading(true);
+  setError(null);
+  try {
+    const response = query
+      ? await searchNews(query)
+      : await getTopHeadlines('us', selectedCategory);
+    setArticles(response.data.articles.slice(0, 45)); // Fetch 45 articles to ensure we have enough for 3 pages
+    setCurrentPage(1);
+  } catch (error) {
+    console.error('Error fetching news:', error);
+    setError('Failed to fetch news. Please try again later.');
+  } finally {
+    setLoading(false);
+  }
+};
 
 
   const handleSearch = (query) => {
@@ -62,6 +58,8 @@ const App = () => {
   };
 
   // Pagination logic
+  const ITEMS_PER_PAGE = 15; // 3 rows of 5 cards each
+
   const indexOfLastArticle = currentPage * ITEMS_PER_PAGE;
   const indexOfFirstArticle = indexOfLastArticle - ITEMS_PER_PAGE;
   const currentArticles = articles.slice(indexOfFirstArticle, indexOfLastArticle);
@@ -71,7 +69,7 @@ const App = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-base-100">
-      <main className="flex-grow container mx-auto px-4 py-8 max-w-7xl">
+      <main className="flex-grow container mx-auto px-4 py-8 max-w-screen-2xl">
         <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} handleSearch={handleSearch}/>
         
         <div className="my-6 flex flex-wrap justify-center gap-2">
@@ -92,11 +90,11 @@ const App = () => {
         {currentArticles.length === 0 && !loading && !error && (
           <p className="text-center text-base-content">No articles found. Try a different search or category.</p>
         )}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {currentArticles.map((article, index) => (
-            <NewsCard key={index} article={article} onClick={setSelectedArticle} />
-          ))}
-        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+  {currentArticles.slice(0, 15).map((article, index) => (
+    <NewsCard key={index} article={article} onClick={setSelectedArticle} />
+  ))}
+</div>
         {selectedArticle && (
           <ArticleDetails article={selectedArticle} onClose={() => setSelectedArticle(null)} />
         )}
