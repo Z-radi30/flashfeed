@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_KEY = 'b236de36de114dfcbfe332c54dc9d19e'; // Replace with your actual API key
+const API_KEY = import.meta.env.VITE_NEWS_API_KEY; // Replace with your actual API key
 const BASE_URL = 'https://newsapi.org/v2';
 
 const newsApi = axios.create({
