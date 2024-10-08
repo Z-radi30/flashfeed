@@ -3,12 +3,11 @@ import { getTopHeadlines, searchNews } from './services/newsApi';
 import NewsCard from './components/NewsCard';
 import ArticleDetails from './components/ArticleDetails';
 import ErrorMessage from './components/ErrorMessage';
-import ThemeSwitcher from './components/ThemeSwitcher';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
 const categories = ['Business', 'Entertainment', 'General', 'Health', 'Science', 'Sports', 'Technology'];
-const ITEMS_PER_PAGE = 9; // 3x3 grid
+const ITEMS_PER_PAGE = 15; // Number of articles per page (3 rows of 5)
 
 const App = () => {
   const [articles, setArticles] = useState([]);
@@ -21,29 +20,29 @@ const App = () => {
 
   useEffect(() => {
     fetchNews();
-  }, [selectedCategory]);
+  }, [selectedCategory]); // Fetch news when category changes
 
   useEffect(() => {
+    // Update theme when darkMode changes
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
   }, [darkMode]);
 
- const fetchNews = async (query = '') => {
-  setLoading(true);
-  setError(null);
-  try {
-    const response = query
-      ? await searchNews(query)
-      : await getTopHeadlines('us', selectedCategory);
-    setArticles(response.data.articles.slice(0, 45)); // Fetch 45 articles to ensure we have enough for 3 pages
-    setCurrentPage(1);
-  } catch (error) {
-    console.error('Error fetching news:', error);
-    setError('Failed to fetch news. Please try again later.');
-  } finally {
-    setLoading(false);
-  }
-};
-
+  const fetchNews = async (query = '') => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = query
+        ? await searchNews(query)
+        : await getTopHeadlines('us', selectedCategory);
+      setArticles(response.data.articles);
+      setCurrentPage(1); // Reset to first page when fetching new articles
+    } catch (error) {
+      console.error('Error fetching news:', error);
+      setError('Failed to fetch news. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSearch = (query) => {
     fetchNews(query);
@@ -58,8 +57,6 @@ const App = () => {
   };
 
   // Pagination logic
-  const ITEMS_PER_PAGE = 15; // 3 rows of 5 cards each
-
   const indexOfLastArticle = currentPage * ITEMS_PER_PAGE;
   const indexOfFirstArticle = indexOfLastArticle - ITEMS_PER_PAGE;
   const currentArticles = articles.slice(indexOfFirstArticle, indexOfLastArticle);
@@ -91,10 +88,10 @@ const App = () => {
           <p className="text-center text-base-content">No articles found. Try a different search or category.</p>
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-  {currentArticles.slice(0, 15).map((article, index) => (
-    <NewsCard key={index} article={article} onClick={setSelectedArticle} />
-  ))}
-</div>
+          {currentArticles.map((article, index) => (
+            <NewsCard key={index} article={article} onClick={setSelectedArticle} />
+          ))}
+        </div>
         {selectedArticle && (
           <ArticleDetails article={selectedArticle} onClose={() => setSelectedArticle(null)} />
         )}
@@ -103,15 +100,8 @@ const App = () => {
         {totalPages > 1 && (
           <div className="flex justify-center mt-8">
             <div className="join">
-              {[...Array(totalPages)].map((_, index) => (
-                <button
-                  key={index}
-                  className={`join-item btn ${currentPage === index + 1 ? 'btn-active' : ''}`}
-                  onClick={() => paginate(index + 1)}
-                >
-                  {index + 1}
-                </button>
-              ))}
+              <button className={`join-item btn ${currentPage === 1 ? 'btn-active' : ''}`} onClick={() => paginate(1)}>1</button>
+              <button className={`join-item btn ${currentPage === 2 ? 'btn-active' : ''}`} onClick={() => paginate(2)}>2</button>
             </div>
           </div>
         )}

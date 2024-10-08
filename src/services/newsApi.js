@@ -1,8 +1,10 @@
 import axios from 'axios';
 
-const API_KEY = import.meta.env.VITE_NEWS_API_KEY; 
+// Use Vite's environment variable syntax
+const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
 const BASE_URL = 'https://newsapi.org/v2';
 
+// Create axios instance with base configuration
 const newsApi = axios.create({
   baseURL: BASE_URL,
   params: {
@@ -10,6 +12,7 @@ const newsApi = axios.create({
   },
 });
 
+// Fetch top headlines with optional country and category parameters
 export const getTopHeadlines = (country = 'us', category = '') => {
   return newsApi.get('/top-headlines', {
     params: {
@@ -19,6 +22,7 @@ export const getTopHeadlines = (country = 'us', category = '') => {
   });
 };
 
+// Search for news articles with a query
 export const searchNews = (query) => {
   return newsApi.get('/everything', {
     params: {
@@ -26,3 +30,5 @@ export const searchNews = (query) => {
     },
   });
 };
+
+export default newsApi;

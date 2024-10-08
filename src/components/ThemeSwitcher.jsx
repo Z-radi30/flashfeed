@@ -5,14 +5,11 @@ const ThemeSwitcher = ({ darkMode, toggleDarkMode }) => {
   return (
     <button
       onClick={toggleDarkMode}
-      className="p-2 rounded-full bg-base-300 text-base-content hover:bg-base-200 transition-colors"
+      className="btn btn-ghost btn-circle"
       aria-label="Toggle dark mode"
     >
-      {darkMode ? (
-        <Sun size={20} className="text-base-content" />
-      ) : (
-        <Moon size={20} className="text-base-content" />
-      )}
+      {/* Show Sun icon for dark mode, Moon icon for light mode */}
+      {darkMode ? <Sun size={20} /> : <Moon size={20} />}
     </button>
   );
 };
