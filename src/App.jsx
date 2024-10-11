@@ -65,10 +65,12 @@ const App = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
+    // Rendering Navbar component
     <div className="flex flex-col min-h-screen bg-base-100">
       <main className="flex-grow container mx-auto px-4 py-8 max-w-screen-2xl">
         <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} handleSearch={handleSearch}/>
         
+    {/* Rendering Category selection buttons */}
         <div className="my-6 flex flex-wrap justify-center gap-2">
           {categories.map((category) => (
             <button
@@ -82,16 +84,22 @@ const App = () => {
             </button>
           ))}
         </div>
+
+        {/* Rendering Loading and error states */}
         {loading && <p className="text-center">Loading...</p>}
         {error && <ErrorMessage message={error} />}
         {currentArticles.length === 0 && !loading && !error && (
           <p className="text-center text-base-content">No articles found. Try a different search or category.</p>
         )}
+
+        {/* Rendering grid of NewsCard components */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {currentArticles.map((article, index) => (
             <NewsCard key={index} article={article} onClick={setSelectedArticle} />
           ))}
         </div>
+
+        {/* Rendering ArticleDetails component for the selected article */}
         {selectedArticle && (
           <ArticleDetails article={selectedArticle} onClose={() => setSelectedArticle(null)} />
         )}
